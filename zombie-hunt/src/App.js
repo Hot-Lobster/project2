@@ -12,11 +12,9 @@ import ChatBox from "./render/chat.js";
 class App extends Component {
   render() {
     return (
-      <Container className="contain">
+      <Container className="App-container">
         <Row>
-          <Col>
             <Navtop />
-          </Col>
         </Row>
         <Row>
           <Col>
