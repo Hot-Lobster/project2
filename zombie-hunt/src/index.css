@@ -20,6 +20,10 @@ code {
   padding: 0;
 }
 
+.App-container {
+  background-color: #aabdbb;
+}
+
 .App-header {
   background-color: #424c58;
   color: #ffffff;
