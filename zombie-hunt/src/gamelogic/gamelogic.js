@@ -1,3 +1,5 @@
+const spawns = ["2,2","16,2","2,11","16,11"];
+
 const zombieVision = [
   "-1,-1" /* start of first circle */,
   "0,-1",
@@ -104,7 +106,7 @@ getNormalVision = player => {
   console.log([player]); /* testing purpose */
 };
 
-function renderVision = (player => {
+renderVision = player => {
   // if they are a zombie
   if (player.infected === true) {
     let currentPosition = player.position;
