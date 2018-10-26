@@ -3,6 +3,7 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #aabdbc
 }
 
 code {
@@ -109,4 +110,8 @@ code {
 
 .Repo-link:hover {
   color: #ff5722;
+}
+
+.contain {
+  background-color: #aabdbb
 }

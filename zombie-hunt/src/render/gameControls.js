@@ -8,7 +8,10 @@ import downArrow from "../imgs/arrows/downArrow.png"; //image path placeholder
 export default class GameControls extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      x: 0,
+      y: 0
+    };
 
     this.left = this.left.bind(this);
     this.right = this.right.bind(this);
@@ -17,16 +20,20 @@ export default class GameControls extends React.Component {
   }
 
   left = event => {
-    console.log("left");
+    this.setState({ x: -1, y: 0 });
+    console.log(this.state.x, this.state.y);
   };
   right = event => {
-    console.log("right");
+    this.setState({ x: 1, y: 0 });
+    console.log(this.state.x, this.state.y);
   };
   up = event => {
-    console.log("up");
+    this.setState({ x: 0, y: 1 });
+    console.log(this.state.x, this.state.y);
   };
   down = event => {
-    console.log("down");
+    this.setState({ x: 0, y: -1 });
+    console.log(this.state.x, this.state.y);
   };
 
   render() {
