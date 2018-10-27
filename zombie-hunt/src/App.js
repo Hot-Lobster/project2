@@ -1,45 +1,157 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "reactstrap";
 import "./index.css";
-import NameForm from "./render/Nameform.js";
-import BoardAndGrid from "./render/boardAndGrid.js";
-import Navtop from "./render/navtop.js";
-import Navbottom from "./render/navbottom.js";
-import GameControls from "./render/gameControls.js";
-import ChatBox from "./render/chat.js";
+import Lobby from "./render/lobby.js";
+import UserName from "./render/login.js";
+import GameSet from "./render/gameSet.js";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import CSSTransitionGroup from "react-transition-group/CSSTransitionGroup";
 
-class App extends Component {
+var FontAwesome = require("react-fontawesome");
+const theme = createMuiTheme({
+  typography: {
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"'
+    ].join(",")
+  }
+});
+
+class Game extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      stage: "UserName",
+      showProgress: false,
+      role: null,
+      roomId: null,
+      slideDirection: "slide",
+      toolbarTitle: ""
+    };
+
+    this.handleLobbyComplete = this.handleLobbyComplete.bind(this);
+    this.handleUserNameComplete = this.handleUserNameComplete.bind(this);
+    this.toggleIndeterminateProgressBar = this.toggleIndeterminateProgressBar.bind(
+      this
+    );
+    this.handleBackPressed = this.handleBackPressed.bind(this);
+    this.setToolbarTitle = this.setToolbarTitle.bind(this);
+  }
+  handleLobbyComplete(roomId, role) {
+    this.setState({
+      slideDirection: "slide", // forwards
+      roomId: roomId,
+      role: role,
+      stage: "GameSet"
+    });
+  }
+
+  handleUserNameComplete() {
+    this.setState({
+      slideDirection: "slide", // forwards
+      stage: "lobby"
+    });
+  }
+
+  handleBackPressed() {
+    switch (this.state.stage) {
+      case "GameSet":
+        this.setState({
+          toolbarTitle: "",
+          slideDirection: "slide-back", // slide backwards
+          stage: "lobby"
+        });
+        break;
+      case "lobby":
+        this.setState({
+          toolbarTitle: "",
+          slideDirection: "slide-back", // slide backwards
+          stage: "UserName"
+        });
+        break;
+    }
+  }
+
+  setToolbarTitle(title) {
+    this.setState({
+      toolbarTitle: title
+    });
+  }
+
+  toggleIndeterminateProgressBar(forceHide) {
+    this.setState({
+      showProgress: forceHide ? false : !this.state.showProgress
+    });
+  }
+
+  getComponent() {
+    if (this.state.stage === "UserName") {
+      return (
+        <UserName
+          toggleProgressBar={this.toggleIndeterminateProgressBar}
+          onComplete={this.handleUserNameComplete}
+        />
+      );
+    } else if (this.state.stage === "lobby") {
+      return <Lobby onComplete={this.handleLobbyComplete} />;
+    } else if (this.state.stage === "GameSet") {
+      return <GameSet roomId={this.state.roomId} role={this.state.role} />;
+    }
+  }
   render() {
+    var showProgress = this.state.showProgress ? "" : "hidden";
+    var showToolbar =
+      this.state.stage === "UserName" ||
+      this.state.stage === "lobby" ||
+      this.state.stage === "GameSet"
+        ? "show"
+        : "hidden";
+
     return (
-      <Container className="contain">
-        <Row>
-          <Col>
-            <Navtop />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <NameForm />
-          </Col>
-          <Col>
-            <BoardAndGrid />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <GameControls />
-          </Col>
-          <Col>
-            <ChatBox />
-          </Col>
-        </Row>
-        <Row>
-          <Navbottom />
-        </Row>
-      </Container>
+      <CSSTransitionGroup
+        transitionName={this.state.slideDirection}
+        transitionEnterTimeout={400}
+        transitionLeaveTimeout={400}
+        component="div"
+      >
+        <div className="slide-component-container" key={this.state.stage}>
+          <div className={showToolbar + " toolbar"}>
+            <div>
+              <FontAwesome
+                onClick={this.handleBackPressed}
+                name="long-arrow-left"
+                size="2x"
+                inverse
+              />
+              <div className="title">{this.state.toolbarTitle}</div>
+            </div>
+          </div>
+
+          <div className={showProgress + " linear-progress"}>
+            <LinearProgress mode="indeterminate" />
+          </div>
+          {this.getComponent()}
+        </div>
+      </CSSTransitionGroup>
     );
   }
 }
+
+const App = () => (
+  <MuiThemeProvider theme={theme}>
+    <Game />
+  </MuiThemeProvider>
+);
 
 export default App;

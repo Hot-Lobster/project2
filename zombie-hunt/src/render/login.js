@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
 import database from "../firebase/firebase";
 
-export default class UserName extends React.Component {
+export default class UserName extends Component {
   constructor(props) {
     super(props);
 
@@ -26,7 +26,6 @@ export default class UserName extends React.Component {
     event.preventDefault(); // don't refresh, etc
 
     var inputName = this.state.inputName;
-    var invalid = false;
 
     if (inputName === "") {
       this.updateUI(1);

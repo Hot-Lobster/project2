@@ -6,6 +6,10 @@ body {
   background-color: #aabdbc
 }
 
+.slide-component-container {
+  background-color: #aabdbb
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
